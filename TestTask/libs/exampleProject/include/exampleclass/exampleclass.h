@@ -18,6 +18,9 @@ public:
     Type back();
     void pop_back();
     void pop_front();
+    void clean();
+    void push_front( Type value );
+
 
 
 private:
@@ -162,4 +165,25 @@ void List< Type >::pop_front() {
         listSize--;
     }
 
+}
+
+template < typename Type >
+void List< Type >::clean() {
+
+    while( listSize != 0 ) {
+        this->pop_front();
+    }
+}
+
+template < typename Type >
+void List< Type >::push_front( Type value ) {
+
+    if( firstSlot == nullptr ) {
+        firstSlot = new Slot< Type >( value );
+    }   else {
+        Slot< Type >* temp = firstSlot;
+        firstSlot = new Slot< Type >( value, temp );
+
+    }
+    listSize++;
 }

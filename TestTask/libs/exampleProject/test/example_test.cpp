@@ -131,3 +131,29 @@ TEST( ListTests, pop_front ) {
 
 
 }
+
+TEST( ListTests, clear ) {
+
+    List< int > list;
+    list.clean();
+    ASSERT_EQ( 0, list.size() );
+
+    list.push_back( 7 );
+    list.push_back( 8 );
+    list.clean();
+    ASSERT_EQ( 0, list.size() );
+
+}
+
+TEST( ListTests, push_front ) {
+
+    List< char > list;
+    list.push_front( 'a' );
+    ASSERT_EQ( 'a', list.front() );
+    list.push_front( 'b' );
+    list.push_front( 'c' );
+    ASSERT_EQ( 'c', list.front() );
+    ASSERT_EQ( 'a', list.back() );
+    ASSERT_EQ( 3, list.size() );
+
+}

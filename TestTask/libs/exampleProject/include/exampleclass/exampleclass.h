@@ -12,6 +12,9 @@ public:
 
     void push_back( Type data );
     int size();
+    bool empty();
+    Type front();
+    Type back();
 
 
 
@@ -62,4 +65,33 @@ void List< Type >::push_back( Type data ) {
 
 }
 
+template < typename Type >
+bool List< Type >::empty() {
+    if( listSize == 0 ) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
 
+template < typename Type >
+Type List< Type >::front() {
+
+    return firstSlot->data;
+
+}
+
+template < typename Type >
+Type List< Type >::back() {
+    if( firstSlot == nullptr ) {
+        return firstSlot->data;
+    } else   {
+
+        Slot< Type >* currentSlot = this->firstSlot;
+        while( currentSlot->ptrNext != nullptr ) {
+            currentSlot = currentSlot->ptrNext;
+        }
+        return currentSlot->data;
+    }
+
+}

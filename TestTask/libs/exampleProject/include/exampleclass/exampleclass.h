@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <typeinfo>
+#include <stdexcept>
 
 template < typename Type >
 class List {
@@ -15,7 +16,7 @@ public:
     bool empty();
     Type front();
     Type back();
-
+    void pop_back();
 
 
 private:
@@ -77,13 +78,23 @@ bool List< Type >::empty() {
 template < typename Type >
 Type List< Type >::front() {
 
+    if( listSize == 0 ) {
+
+        throw std::runtime_error( "list is empty" ); // need to check
+    }
     return firstSlot->data;
+
 
 }
 
 template < typename Type >
 Type List< Type >::back() {
-    if( firstSlot == nullptr ) {
+
+    if( listSize == 0 ) {
+
+        throw std::runtime_error( "list is empty" ); // need to check
+    }
+    if( listSize == 1 ) {
         return firstSlot->data;
     } else   {
 
@@ -95,3 +106,18 @@ Type List< Type >::back() {
     }
 
 }
+
+// template < typename Type >
+// void List< Type >::pop_back() {
+
+// if( firstSlot == nullptr ) {
+
+
+// Slot< Type >* currentSlot = firstSlot;
+// for( uint32_t i = 1; i < listSize - 1; i++ ) {
+// currentSlot = currentSlot->ptrNext;
+// }
+// delete currentSlot->ptrNext;
+// currentSlot->ptrNext = nullptr;
+// listSize--;
+// }

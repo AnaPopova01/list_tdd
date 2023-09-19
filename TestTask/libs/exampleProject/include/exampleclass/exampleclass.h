@@ -17,6 +17,7 @@ public:
     Type front();
     Type back();
     void pop_back();
+    void pop_front();
 
 
 private:
@@ -96,7 +97,7 @@ Type List< Type >::back() {
     }
     if( listSize == 1 ) {
         return firstSlot->data;
-    } else   {
+    } else {
 
         Slot< Type >* currentSlot = this->firstSlot;
         while( currentSlot->ptrNext != nullptr ) {
@@ -107,17 +108,58 @@ Type List< Type >::back() {
 
 }
 
-// template < typename Type >
-// void List< Type >::pop_back() {
+template < typename Type >
+void List< Type >::pop_back() {
 
-// if( firstSlot == nullptr ) {
+    if( listSize == 0 ) {
 
+        throw std::runtime_error( "list is empty" ); // need to check
 
-// Slot< Type >* currentSlot = firstSlot;
-// for( uint32_t i = 1; i < listSize - 1; i++ ) {
-// currentSlot = currentSlot->ptrNext;
-// }
-// delete currentSlot->ptrNext;
-// currentSlot->ptrNext = nullptr;
-// listSize--;
-// }
+    }
+
+    if( listSize == 1 ) {
+
+        delete firstSlot;
+        firstSlot = nullptr;
+        listSize--;
+
+    }
+
+    if( listSize > 1 ) {
+
+        Slot< Type >* currentSlot = firstSlot;
+        for( uint32_t i = 0; i < listSize - 2; i++ ) {
+            currentSlot = currentSlot->ptrNext;
+        }
+        delete currentSlot->ptrNext;
+        currentSlot->ptrNext = nullptr;
+        listSize--;
+    }
+
+}
+
+template < typename Type >
+void List< Type >::pop_front() {
+
+    if( listSize == 0 ) {
+
+        throw std::runtime_error( "list is empty" ); // need to check
+
+    }
+
+    if( listSize == 1 ) {
+
+        delete firstSlot;
+        firstSlot = nullptr;
+        listSize--;
+
+    }
+    if( listSize > 1 ) {
+        Slot< Type >* temp = firstSlot;
+        firstSlot = firstSlot->ptrNext;
+        delete temp;
+        temp = nullptr;
+        listSize--;
+    }
+
+}

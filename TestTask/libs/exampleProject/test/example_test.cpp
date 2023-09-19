@@ -78,16 +78,56 @@ TEST( ListTests, back ) {
 
 }
 
-// TEST( ListTests, pop_back ) {
+TEST( ListTests, pop_back ) {
 
-// List< char > list;
-// list.push_back( 'a' );
-// list.push_back( 'b' );
-// list.push_back( 'c' );
-// list.push_back( 'd' );
-// ASSERT_EQ( 4, list.size() );
-// list.pop_back();
-// ASSERT_EQ( 'c', list.back() );
-// ASSERT_EQ( 3, list.size() );
+    List< char > list;
+    try {
+        list.pop_back();
 
-// }
+    } catch( std::runtime_error& e ) {
+
+        ASSERT_STREQ( e.what(), "list is empty" );
+        // std::cerr << e.what() << std::endl;
+
+    }
+
+    list.push_back( 'a' );
+    list.pop_back();
+    ASSERT_EQ( 0, list.size() );
+
+    list.push_back( 'a' );
+    list.push_back( 'b' );
+    list.push_back( 'c' );
+    list.pop_back();
+    ASSERT_EQ( 2, list.size() );
+    ASSERT_EQ( 'b', list.back() );
+
+
+}
+
+TEST( ListTests, pop_front ) {
+
+    List< char > list;
+    try {
+        list.pop_front();
+
+    } catch( std::runtime_error& e ) {
+
+        ASSERT_STREQ( e.what(), "list is empty" );
+        // std::cerr << e.what() << std::endl;
+
+    }
+
+    list.push_back( 'a' );
+    list.pop_front();
+    ASSERT_EQ( 0, list.size() );
+
+    list.push_back( 'a' );
+    list.push_back( 'b' );
+    list.push_back( 'c' );
+    list.pop_front();
+    ASSERT_EQ( 2, list.size() );
+    ASSERT_EQ( 'b', list.front() );
+
+
+}

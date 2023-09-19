@@ -9,6 +9,12 @@ public:
     ~List() {
     }
 
+
+    void push_back( Type data );
+    int size();
+
+
+
 private:
 
     template < typename >
@@ -27,8 +33,6 @@ public:
     std::size_t listSize;
 };
 
-
-
 template < typename Type >
 List< Type >::List() {
 
@@ -36,5 +40,26 @@ List< Type >::List() {
     firstSlot = nullptr;
 }
 
+template < typename Type >
+int List< Type >::size() {
+    return listSize;
+}
+
+template < typename Type >
+void List< Type >::push_back( Type data ) {
+
+    if( firstSlot == nullptr ) {
+        firstSlot = new Slot< Type >( data );
+    } else {
+
+        Slot< Type >* currentSlot = this->firstSlot;
+        while( currentSlot->ptrNext != nullptr ) {
+            currentSlot = currentSlot->ptrNext;
+        }
+        currentSlot->ptrNext = new Slot< Type >( data );
+    }
+    listSize++;
+
+}
 
 

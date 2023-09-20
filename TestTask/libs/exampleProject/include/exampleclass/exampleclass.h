@@ -8,6 +8,7 @@ class List {
 public:
     List();
     ~List() {
+        clean();
     }
 
 
@@ -20,6 +21,7 @@ public:
     void pop_front();
     void clean();
     void push_front( Type value );
+    void erase( size_t pos );
 
 
 
@@ -186,4 +188,45 @@ void List< Type >::push_front( Type value ) {
 
     }
     listSize++;
+}
+
+
+
+// what to do here :(
+
+
+template < typename Type >
+void List< Type >::erase( size_t pos ) {
+
+    if( listSize == 0 ) {
+
+        throw std::runtime_error( "list is empty" ); // need to check
+
+    }
+    if( pos > listSize ) {
+
+        throw std::runtime_error( "this position is out of range" ); // need to check
+
+    }
+    if( pos == 0 ) {
+
+        throw std::runtime_error( "did you mean 1st position" ); // need to check
+
+    }
+
+    if( pos == 1 ) {
+        pop_front();
+    } else if( pos == listSize )   {
+        pop_back();
+    } else   {
+        Slot< Type >* currentSlot = firstSlot; // или this->firstSlot?
+        for( std::size_t counter = 1; counter != pos - 1; counter++ ) {
+            currentSlot = currentSlot->ptrNext;
+        }
+        Slot< Type >* temp = currentSlot->ptrNext;
+        currentSlot->ptrNext = temp->ptrNext;
+        delete temp;
+        temp = nullptr;
+        listSize--;
+    }
 }

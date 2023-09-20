@@ -149,11 +149,67 @@ TEST( ListTests, push_front ) {
 
     List< char > list;
     list.push_front( 'a' );
+    ASSERT_EQ( 1, list.size() );
     ASSERT_EQ( 'a', list.front() );
     list.push_front( 'b' );
     list.push_front( 'c' );
     ASSERT_EQ( 'c', list.front() );
     ASSERT_EQ( 'a', list.back() );
     ASSERT_EQ( 3, list.size() );
+
+}
+
+TEST( ListTests, erase ) {
+
+    List< char > list;
+
+    try {
+
+        list.erase( 1 );
+
+    } catch( std::runtime_error& e ) {
+
+        ASSERT_STREQ( e.what(), "list is empty" );
+        std::cerr << e.what() << std::endl;
+
+    }
+
+    list.push_back( 'a' );
+    list.erase( 1 );
+    ASSERT_EQ( 0, list.size() );
+
+    list.push_back( 'a' );
+    list.push_back( 'b' );
+    list.push_back( 'c' );
+    list.push_back( 'd' );
+    list.push_back( 'e' );
+    list.erase( 5 );
+    list.erase( 1 );
+    list.erase( 2 );
+    ASSERT_EQ( 2, list.size() );
+    ASSERT_EQ( 'b', list.front() );
+    ASSERT_EQ( 'd', list.back() );
+
+    try {
+
+        list.erase( 5 );
+
+    } catch( std::runtime_error& e ) {
+
+        ASSERT_STREQ( e.what(), "this position is out of range" );
+        std::cerr << e.what() << std::endl;
+
+    }
+    try {
+
+        list.erase( 0 );
+
+    } catch( std::runtime_error& e ) {
+
+        ASSERT_STREQ( e.what(), "did you mean 1st position" );
+        std::cerr << e.what() << std::endl;
+
+    }
+
 
 }

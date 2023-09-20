@@ -38,6 +38,7 @@ TEST( ListTests, empty ) {
 TEST( ListTests, front ) {
 
     List< char > list;
+
     try {
         list.front();
 
@@ -303,5 +304,80 @@ TEST( ListTests, insert ) {
     ASSERT_EQ( 5, list.size() );
 
 
+
+}
+
+// TEST( ListTests, swap ) {
+
+// List< char > alist;
+// alist.push_back( 'a' );
+// alist.push_back( 'a' );
+// alist.push_back( 'a' );
+
+// List< char > blist;
+// blist.push_back( 'b' );
+// blist.push_back( 'b' );
+// blist.push_back( 'b' );
+
+// alist.swap( blist );
+// ASSERT_EQ( 'b', alist.front() );
+
+// }
+
+TEST( ListTests, resize ) {
+
+    List< char > mylist;
+    List< char > list;
+
+    mylist.resize( 5 );
+    ASSERT_EQ( 5, mylist.size() );
+
+    list.push_back( 'a' );
+    list.push_back( 'b' );
+    list.push_back( 'c' );
+
+    list.resize( 3 );
+    ASSERT_EQ( 3, list.size() );
+
+    list.resize( 2 );
+    ASSERT_EQ( 2, list.size() );
+    ASSERT_EQ( 'b', list.back() );
+
+    list.resize( 5 );
+    ASSERT_EQ( 5, list.size() );
+
+    list.resize( 0 );
+    ASSERT_EQ( 0, list.size() );
+
+}
+
+TEST( ListTests, value_resize ) {
+
+    List< char > mylist;
+    List< char > list;
+
+    mylist.resize( 5, 'g' );
+    ASSERT_EQ( 5, mylist.size() );
+    ASSERT_EQ( 'g', mylist.front() );
+    ASSERT_EQ( 'g', mylist.back() );
+
+    list.push_back( 'a' );
+    list.push_back( 'b' );
+    list.push_back( 'c' );
+
+    list.resize( 3, 'z' );
+    ASSERT_EQ( 3, list.size() );
+    ASSERT_EQ( 'c', list.back() );
+
+    list.resize( 2, 'g' );
+    ASSERT_EQ( 2, list.size() );
+    ASSERT_EQ( 'b', list.back() );
+
+    list.resize( 5, 'g' );
+    ASSERT_EQ( 5, list.size() );
+    ASSERT_EQ( 'g', mylist.back() );
+
+    list.resize( 0, 'g' );
+    ASSERT_EQ( 0, list.size() );
 
 }

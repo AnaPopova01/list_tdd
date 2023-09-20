@@ -13,6 +13,7 @@ public:
 
 
     void push_back( Type data );
+    void push_back();
     int size();
     bool empty();
     Type front();
@@ -25,6 +26,9 @@ public:
     Type* begin();
     Type* end();
     void insert( size_t pos, Type value );
+    void swap( List& other_list );
+    void resize( size_t n );
+    void resize( size_t n, Type value );
 
 
 
@@ -70,6 +74,23 @@ void List< Type >::push_back( Type data ) {
             currentSlot = currentSlot->ptrNext;
         }
         currentSlot->ptrNext = new Slot< Type >( data );
+    }
+    listSize++;
+
+}
+
+template < typename Type >
+void List< Type >::push_back() {
+
+    if( firstSlot == nullptr ) {
+        firstSlot = new Slot< Type >();
+    } else {
+
+        Slot< Type >* currentSlot = this->firstSlot;
+        while( currentSlot->ptrNext != nullptr ) {
+            currentSlot = currentSlot->ptrNext;
+        }
+        currentSlot->ptrNext = new Slot< Type >();
     }
     listSize++;
 
@@ -236,8 +257,8 @@ Type* List< Type >::begin() {
 
         throw std::runtime_error( "list is empty" ); // need to check
     }
-    Type* dataptr = &( firstSlot->data );
-    return dataptr;
+    // Type* dataptr = &( firstSlot->data );
+    return &( firstSlot->data );
 
 
 }
@@ -258,8 +279,8 @@ Type* List< Type >::end() {
         while( currentSlot->ptrNext != nullptr ) {
             currentSlot = currentSlot->ptrNext;
         }
-        Type* dataptr = &( currentSlot->data );
-        return dataptr;
+        // Type* dataptr = &( currentSlot->data );
+        return &( currentSlot->data );
     }
 }
 
@@ -289,5 +310,46 @@ void List< Type >::insert( std::size_t pos, Type value ) {
         Slot< Type >* nSlot = new Slot< Type >( value, currentSlot->ptrNext );
         currentSlot->ptrNext = nSlot;
         listSize++;
+    }
+}
+
+template < typename Type >
+void List< Type >::swap( List& other_list ) {
+
+// Slot< Type >* temp = this->firstSlot;
+// this->firstSlot = other_list->firstSlot;
+// other_list->firstSlot = temp;
+}
+
+template < typename Type >
+void List< Type >::resize( size_t n ) {
+
+    if( n == 0 ) {
+
+        clean();
+    } else if( n > listSize ) {
+
+        while( n != listSize ) {
+
+            push_back();
+        }
+    } else if( n < listSize ) {
+        while( n != listSize ) {
+            pop_back();
+        }
+    }
+}
+
+template < typename Type >
+void List< Type >::resize( size_t n, Type value ) {
+
+    if( n < listSize ) {
+        resize( n );
+    } else {
+
+        while( n != listSize ) {
+
+            push_back( value );
+        }
     }
 }

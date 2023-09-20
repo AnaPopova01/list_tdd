@@ -26,9 +26,12 @@ public:
     Type* begin();
     Type* end();
     void insert( size_t pos, Type value );
-    void swap( List& other_list );
     void resize( size_t n );
     void resize( size_t n, Type value );
+    void swap( List& other_list ); // sxdcfvghbjnmk,l.;/
+
+// Type& operator[]( size_t index );
+// const Type& operator[]( size_t index ) const;
 
 
 
@@ -222,24 +225,19 @@ void List< Type >::erase( size_t pos ) {
         throw std::runtime_error( "list is empty" ); // need to check
 
     }
-    if( pos > listSize ) {
+    if( pos >= listSize ) {
 
         throw std::runtime_error( "this position is out of range" ); // need to check
 
     }
+
     if( pos == 0 ) {
-
-        throw std::runtime_error( "did you mean 1st position" ); // need to check
-
-    }
-
-    if( pos == 1 ) {
         pop_front();
-    } else if( pos == listSize ) {
+    } else if( pos == listSize - 1 ) {
         pop_back();
     } else {
         Slot< Type >* currentSlot = firstSlot; // или this->firstSlot?
-        for( std::size_t counter = 1; counter != pos - 1; counter++ ) {
+        for( std::size_t counter = 0; counter != pos - 1; counter++ ) {
             currentSlot = currentSlot->ptrNext;
         }
         Slot< Type >* temp = currentSlot->ptrNext;
@@ -287,24 +285,22 @@ Type* List< Type >::end() {
 template < typename Type >
 void List< Type >::insert( std::size_t pos, Type value ) {
 
-    if( pos == 0 ) {
 
-        throw std::runtime_error( "there is no zero position" );
-    }
-    if( pos > listSize + 1 ) {
+    if(  pos == 0  ) {
 
-        throw std::runtime_error( "this position is out of range" );
-    }
-    if( pos == listSize + 1 ) {
+        push_front( value );
+
+    } else if( pos == listSize ) {
 
         push_back( value );
 
-    } else if( pos == 1 ) {
-        push_front( value );
+    } else if( pos > listSize ) {
+
+        throw std::runtime_error( "this position is out of range" );
 
     } else {
         Slot< Type >* currentSlot = this->firstSlot;
-        for( std::size_t counter = 0; counter < pos - 2; counter++ ) {
+        for( std::size_t counter = 0; counter < pos - 1; counter++ ) {
             currentSlot = currentSlot->ptrNext;
         }
         Slot< Type >* nSlot = new Slot< Type >( value, currentSlot->ptrNext );
@@ -316,9 +312,9 @@ void List< Type >::insert( std::size_t pos, Type value ) {
 template < typename Type >
 void List< Type >::swap( List& other_list ) {
 
-// Slot< Type >* temp = this->firstSlot;
-// this->firstSlot = other_list->firstSlot;
-// other_list->firstSlot = temp;
+    Slot< Type >* temp = this->firstSlot;
+    this->firstSlot = other_list->firstSlot;
+    other_list->firstSlot = temp;
 }
 
 template < typename Type >
@@ -353,3 +349,32 @@ void List< Type >::resize( size_t n, Type value ) {
         }
     }
 }
+
+// template < typename Type >
+// Type&  List< Type >::operator[]( size_t index ) {
+
+// if( listSize == 0 ) {
+
+// throw std::runtime_error( "list is empty" ); // need to check
+
+// }
+// if( index > listSize ) {
+
+// throw std::runtime_error( "this position is out of range" ); // need to check
+
+// }
+
+
+
+// size_t counter = 0;
+// Slot< Type >* currentSlot = this->firstSlot;
+// while( currentSlot != nullptr ) {
+// if( counter == ( index ) ) {
+// return currentSlot->data;
+
+// } else {
+// currentSlot = currentSlot->ptrNext;
+// counter++;
+// }
+// }
+// }

@@ -166,7 +166,7 @@ TEST( ListTests, erase ) {
 
     try {
 
-        list.erase( 1 );
+        list.erase( 0 );
 
     } catch( std::runtime_error& e ) {
 
@@ -176,7 +176,7 @@ TEST( ListTests, erase ) {
     }
 
     list.push_back( 'a' );
-    list.erase( 1 );
+    list.erase( 0 );
     ASSERT_EQ( 0, list.size() );
 
     list.push_back( 'a' );
@@ -184,9 +184,9 @@ TEST( ListTests, erase ) {
     list.push_back( 'c' );
     list.push_back( 'd' );
     list.push_back( 'e' );
-    list.erase( 5 );
+    list.erase( 4 );
+    list.erase( 0 );
     list.erase( 1 );
-    list.erase( 2 );
     ASSERT_EQ( 2, list.size() );
     ASSERT_EQ( 'b', list.front() );
     ASSERT_EQ( 'd', list.back() );
@@ -201,18 +201,6 @@ TEST( ListTests, erase ) {
         // std::cerr << e.what() << std::endl;
 
     }
-    try {
-
-        list.erase( 0 );
-
-    } catch( std::runtime_error& e ) {
-
-        ASSERT_STREQ( e.what(), "did you mean 1st position" );
-        // std::cerr << e.what() << std::endl;
-
-    }
-
-
 }
 
 TEST( ListTests, begin ) {
@@ -280,28 +268,22 @@ TEST( ListTests, insert ) {
 
     }
 
-    try {
-        list.insert( 0, 'a' );
-
-    } catch( std::runtime_error& e ) {
-
-        ASSERT_STREQ( e.what(), "there is no zero position" );
-        // std::cerr << e.what() << std::endl;
-
-    }
-
-    list.insert( 1, 'g' );
+    list.insert( 0, 'g' );
     ASSERT_EQ( 'g', list.front() );
     list.pop_front();
 
     list.push_back( 'a' );
-    list.insert( 2, 'b' );
+    list.insert( 1, 'b' );
     ASSERT_EQ( 2, list.size() );
+
     list.push_back( 'd' );
-    list.insert( 3, 'c' );
+    list.insert( 2, 'c' );
     ASSERT_EQ( 4, list.size() );
-    list.insert( 1, 'z' );
-    ASSERT_EQ( 5, list.size() );
+    list.pop_back();
+    ASSERT_EQ( 'c', list.back() );
+
+    list.insert( 3, 'z' );
+    ASSERT_EQ( 4, list.size() );
 
 
 
@@ -381,3 +363,18 @@ TEST( ListTests, value_resize ) {
     ASSERT_EQ( 0, list.size() );
 
 }
+
+// TEST( ListTests, brackets ) {
+
+// List< char > list;
+// char sym = list[ 2 ];
+
+
+// list.push_back( 'a' );
+// list.push_back( 'b' );
+// list.push_back( 'c' );
+
+// char sym = list[ 10 ];
+// ASSERT_EQ( 'c', list[ 2 ] );
+
+// }

@@ -24,6 +24,7 @@ public:
     void erase( size_t pos );
     Type* begin();
     Type* end();
+    void insert( size_t pos, Type value );
 
 
 
@@ -252,7 +253,7 @@ Type* List< Type >::end() {
 
         Type* dataptr = &( firstSlot->data );
         return dataptr;
-    } else   {
+    } else {
         Slot< Type >* currentSlot = this->firstSlot;
         while( currentSlot->ptrNext != nullptr ) {
             currentSlot = currentSlot->ptrNext;
@@ -262,3 +263,31 @@ Type* List< Type >::end() {
     }
 }
 
+template < typename Type >
+void List< Type >::insert( std::size_t pos, Type value ) {
+
+    if( pos == 0 ) {
+
+        throw std::runtime_error( "there is no zero position" );
+    }
+    if( pos > listSize + 1 ) {
+
+        throw std::runtime_error( "this position is out of range" );
+    }
+    if( pos == listSize + 1 ) {
+
+        push_back( value );
+
+    } else if( pos == 1 ) {
+        push_front( value );
+
+    } else {
+        Slot< Type >* currentSlot = this->firstSlot;
+        for( std::size_t counter = 0; counter < pos - 2; counter++ ) {
+            currentSlot = currentSlot->ptrNext;
+        }
+        Slot< Type >* nSlot = new Slot< Type >( value, currentSlot->ptrNext );
+        currentSlot->ptrNext = nSlot;
+        listSize++;
+    }
+}

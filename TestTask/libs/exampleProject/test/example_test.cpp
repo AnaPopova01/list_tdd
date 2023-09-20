@@ -248,7 +248,7 @@ TEST( ListTests, end ) {
     } catch( std::runtime_error& e ) {
 
         ASSERT_STREQ( e.what(), "list is empty" );
-        std::cerr << e.what() << std::endl;
+        // std::cerr << e.what() << std::endl;
 
     }
 
@@ -262,5 +262,46 @@ TEST( ListTests, end ) {
     myptr = list.end();
     *myptr = 'z';
     ASSERT_EQ( 'z', list.back() );
+
+}
+
+TEST( ListTests, insert ) {
+
+    List< char > list;
+
+    try {
+        list.insert( 5, 'a' );
+
+    } catch( std::runtime_error& e ) {
+
+        ASSERT_STREQ( e.what(), "this position is out of range" );
+        // std::cerr << e.what() << std::endl;
+
+    }
+
+    try {
+        list.insert( 0, 'a' );
+
+    } catch( std::runtime_error& e ) {
+
+        ASSERT_STREQ( e.what(), "there is no zero position" );
+        // std::cerr << e.what() << std::endl;
+
+    }
+
+    list.insert( 1, 'g' );
+    ASSERT_EQ( 'g', list.front() );
+    list.pop_front();
+
+    list.push_back( 'a' );
+    list.insert( 2, 'b' );
+    ASSERT_EQ( 2, list.size() );
+    list.push_back( 'd' );
+    list.insert( 3, 'c' );
+    ASSERT_EQ( 4, list.size() );
+    list.insert( 1, 'z' );
+    ASSERT_EQ( 5, list.size() );
+
+
 
 }

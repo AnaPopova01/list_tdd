@@ -22,6 +22,8 @@ public:
     void clean();
     void push_front( Type value );
     void erase( size_t pos );
+    Type* begin();
+    Type* end();
 
 
 
@@ -190,11 +192,6 @@ void List< Type >::push_front( Type value ) {
     listSize++;
 }
 
-
-
-// what to do here :(
-
-
 template < typename Type >
 void List< Type >::erase( size_t pos ) {
 
@@ -216,9 +213,9 @@ void List< Type >::erase( size_t pos ) {
 
     if( pos == 1 ) {
         pop_front();
-    } else if( pos == listSize )   {
+    } else if( pos == listSize ) {
         pop_back();
-    } else   {
+    } else {
         Slot< Type >* currentSlot = firstSlot; // или this->firstSlot?
         for( std::size_t counter = 1; counter != pos - 1; counter++ ) {
             currentSlot = currentSlot->ptrNext;
@@ -230,3 +227,38 @@ void List< Type >::erase( size_t pos ) {
         listSize--;
     }
 }
+
+template < typename Type >
+Type* List< Type >::begin() {
+
+    if( listSize == 0 ) {
+
+        throw std::runtime_error( "list is empty" ); // need to check
+    }
+    Type* dataptr = &( firstSlot->data );
+    return dataptr;
+
+
+}
+
+template < typename Type >
+Type* List< Type >::end() {
+
+    if( listSize == 0 ) {
+
+        throw std::runtime_error( "list is empty" ); // need to check
+    }
+    if( listSize == 1 ) {
+
+        Type* dataptr = &( firstSlot->data );
+        return dataptr;
+    } else   {
+        Slot< Type >* currentSlot = this->firstSlot;
+        while( currentSlot->ptrNext != nullptr ) {
+            currentSlot = currentSlot->ptrNext;
+        }
+        Type* dataptr = &( currentSlot->data );
+        return dataptr;
+    }
+}
+

@@ -3,6 +3,9 @@
 #include <typeinfo>
 #include <stdexcept>
 
+
+
+
 template < typename Type >
 class List {
 public:
@@ -11,7 +14,9 @@ public:
         clean();
     }
 
-
+    size_t getSize() {
+        return listSize;
+    }
     void push_back( Type data );
     void push_back();
     int size();
@@ -28,10 +33,12 @@ public:
     void insert( size_t pos, Type value );
     void resize( size_t n );
     void resize( size_t n, Type value );
+
     void swap( List& other_list ); // sxdcfvghbjnmk,l.;/
 
-// Type& operator[]( size_t index );
-// const Type& operator[]( size_t index ) const;
+
+    Type& operator[]( size_t index );
+    const Type& operator[]( size_t index ) const;
 
 
 
@@ -350,31 +357,121 @@ void List< Type >::resize( size_t n, Type value ) {
     }
 }
 
-// template < typename Type >
-// Type&  List< Type >::operator[]( size_t index ) {
+template < typename Type >
+const Type&  List< Type >::operator[]( size_t index ) const {
 
-// if( listSize == 0 ) {
+    if( listSize == 0 ) {
 
-// throw std::runtime_error( "list is empty" ); // need to check
+        throw std::runtime_error( "list is empty" ); // need to check
 
-// }
-// if( index > listSize ) {
+    } else if( index >= listSize ) {
 
-// throw std::runtime_error( "this position is out of range" ); // need to check
+        throw std::runtime_error( "this position is out of range" ); // need to check
 
-// }
+    } else {
+
+        Slot< Type >* currentSlot = this->firstSlot;
+        for( std::size_t i = 0; i < index; i++ ) {
+            currentSlot = currentSlot->ptrNext;
+        }
+        return currentSlot->data;
+
+    }
+
+}
+
+template < typename Type >
+Type&  List< Type >::operator[]( size_t index ) {
+
+    if( listSize == 0 ) {
+
+        throw std::runtime_error( "list is empty" ); // need to check
+
+    } else if( index >= listSize ) {
+
+        throw std::runtime_error( "this position is out of range" ); // need to check
+
+    } else {
+
+        Slot< Type >* currentSlot = this->firstSlot;
+        for( std::size_t i = 0; i < index; i++ ) {
+            currentSlot = currentSlot->ptrNext;
+        }
+        return currentSlot->data;
+
+    }
+
+}
+
+template < typename Type >
+void unique( List< Type >& list ) {
+
+    size_t lSize = list.getSize();
+
+    if( lSize == 0 ) {
+
+        throw std::runtime_error( "list is empty" );
+    } else if( lSize > 1 ) {
+
+        for( size_t newN = 0; newN < lSize - 1; newN++ ) {
+            for( size_t oldN = newN + 1; oldN < lSize;) {
+                if( list[ oldN ] == list[ newN ] ) {
+                    list.erase( oldN );
+                    lSize--;
+
+                } else {
+                    oldN++;
+                }
+
+            }
+        }
+
+    }
+
+
+}
 
 
 
-// size_t counter = 0;
-// Slot< Type >* currentSlot = this->firstSlot;
-// while( currentSlot != nullptr ) {
-// if( counter == ( index ) ) {
-// return currentSlot->data;
 
+
+// size_t pos = 1;
+// Slot< Type >* currentSlot = firstSlot->ptrNext;
+// Slot< Type >* anotherFirst = firstSlot->ptrNext;
+
+// while( anotherFirst->ptrNext != nullptr ) {
+
+
+// while( currentSlot->ptrNext != nullptr ) {
+// if( anotherFirst->data == currentSlot->data ) {
+
+// currentSlot = currentSlot->ptrNext;
+// erase( pos );
+// pos++;
 // } else {
 // currentSlot = currentSlot->ptrNext;
-// counter++;
+// pos++;
 // }
+
 // }
+// anotherFirst = anotherFirst->ptrNext;
 // }
+
+
+
+
+
+// Slot< Type >* anotherFirst = new Slot< Type >( firstSlot->data );
+// Slot< Type >* currentSlot = firstSlot->ptrNext;
+// Slot< Type >* anotherCurrent = anotherFirst;
+// bool same = 0;
+
+// size_t counter = 0;
+
+// for( size_t i = 1; i < listSize; i++ ) {
+// if( currentSlot->data == anotherCurrent->data ) {
+// same = true;
+// }
+// currentSlot = currentSlot->ptrNext;
+// }
+// if (same

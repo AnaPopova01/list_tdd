@@ -364,17 +364,82 @@ TEST( ListTests, value_resize ) {
 
 }
 
-// TEST( ListTests, brackets ) {
+TEST( ListTests, brackets ) {
 
-// List< char > list;
-// char sym = list[ 2 ];
+    List< char > list;
+
+    try {
+        char sym = list[ 2 ];
+
+    } catch( std::runtime_error& e ) {
+
+        ASSERT_STREQ( e.what(), "list is empty" );
+        // std::cerr << e.what() << std::endl;
+
+    }
+
+    list.push_back( 'a' );
+    list.push_back( 'b' );
+    list.push_back( 'c' );
+    list.push_back( 'd' );
+    ASSERT_EQ( 'a', list[ 0 ] );
+    ASSERT_EQ( 'c', list[ 2 ] );
+    ASSERT_EQ( 'd', list[ 3 ] );
+
+    list[ 2 ] = 'z';
+    ASSERT_EQ( 'z', list[ 2 ] );
+
+    // const char sym = list[ 2 ];
+
+    try {
+        char sym = list[ 4 ];
+
+    } catch( std::runtime_error& e ) {
+
+        ASSERT_STREQ( e.what(), "this position is out of range" );
+        // std::cerr << e.what() << std::endl;
+
+    }
+
+}
+
+TEST( ListTests, unique ) {
+
+    List< char > list;
+
+    try {
+        unique( list );
+
+    } catch( std::runtime_error& e ) {
+
+        ASSERT_STREQ( e.what(), "list is empty" );
+        // std::cerr << e.what() << std::endl;
+
+    }
+
+    list.push_back( 'a' );
+    unique( list );
+    ASSERT_EQ( 1, list.size() );
+
+    list.push_back( 'a' );
+    unique( list );
+    ASSERT_EQ( 1, list.size() );
 
 
-// list.push_back( 'a' );
-// list.push_back( 'b' );
-// list.push_back( 'c' );
 
-// char sym = list[ 10 ];
-// ASSERT_EQ( 'c', list[ 2 ] );
+    list.push_back( 'b' );
+    list.push_back( 'c' );
+    list.push_back( 'a' );
+    list.push_back( 'b' );
+    list.push_back( 'c' );
+    list.push_back( 'c' );
+    list.push_back( 'c' );
+    list.push_back( 'a' );
+    list.push_back( 'g' );
 
-// }
+
+    unique( list );
+    ASSERT_EQ( 4, list.size() );
+
+
+}

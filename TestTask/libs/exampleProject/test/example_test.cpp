@@ -289,23 +289,6 @@ TEST( ListTests, insert ) {
 
 }
 
-// TEST( ListTests, swap ) {
-
-// List< char > alist;
-// alist.push_back( 'a' );
-// alist.push_back( 'a' );
-// alist.push_back( 'a' );
-
-// List< char > blist;
-// blist.push_back( 'b' );
-// blist.push_back( 'b' );
-// blist.push_back( 'b' );
-
-// alist.swap( blist );
-// ASSERT_EQ( 'b', alist.front() );
-
-// }
-
 TEST( ListTests, resize ) {
 
     List< char > mylist;
@@ -440,6 +423,43 @@ TEST( ListTests, unique ) {
 
     unique( list );
     ASSERT_EQ( 4, list.size() );
+
+
+}
+
+TEST( ListTests, swap ) {
+
+    List< char > myList;
+    List< char > otherList;
+
+    myList.swap( otherList );
+
+    try {
+        myList.pop_back();
+
+    } catch( std::runtime_error& e ) {
+
+        ASSERT_STREQ( e.what(), "list is empty" );
+        std::cerr << e.what() << std::endl;
+
+    }
+
+    myList.push_back( 'a' );
+    myList.swap( otherList );
+    ASSERT_EQ( 'a', otherList.front() );
+    ASSERT_EQ( 0, myList.size() );
+
+    otherList.push_back( 'b' );
+    otherList.push_back( 'c' );
+    myList.push_back( '1' );
+    myList.push_back( '2' );
+    myList.push_back( '3' );
+    myList.push_back( '4' );
+    myList.swap( otherList );
+    ASSERT_EQ( 3, myList.size() );
+    ASSERT_EQ( '1', otherList.front() );
+
+
 
 
 }

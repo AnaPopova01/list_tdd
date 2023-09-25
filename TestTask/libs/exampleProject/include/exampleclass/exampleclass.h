@@ -317,14 +317,6 @@ void List< Type >::insert( std::size_t pos, Type value ) {
 }
 
 template < typename Type >
-void List< Type >::swap( List& other_list ) {
-
-    Slot< Type >* temp = this->firstSlot;
-    this->firstSlot = other_list->firstSlot;
-    other_list->firstSlot = temp;
-}
-
-template < typename Type >
 void List< Type >::resize( size_t n ) {
 
     if( n == 0 ) {
@@ -431,47 +423,46 @@ void unique( List< Type >& list ) {
 
 }
 
+template < typename Type >
+void List< Type >::swap( List& other_list ) {
+
+    size_t mySize = this->listSize;
+    size_t otherSize = other_list.getSize();
+    Type tempValue;
+    if( mySize > otherSize ) {
+
+        other_list.resize( mySize );
+        for( size_t i = 0; i < mySize; i++ ) {
+
+            tempValue = this->operator[]( i );
+            this->operator[]( i ) = other_list[ i ];
+            other_list[ i ] = tempValue;
+        }
+        this->resize( otherSize );
+    } else if( mySize < otherSize ) {
+
+        this->resize( otherSize );
+        for( size_t i = 0; i < mySize; i++ ) {
+
+            tempValue = this->operator[]( i );
+            this->operator[]( i ) = other_list[ i ];
+            other_list[ i ] = tempValue;
+        }
+        other_list.resize( mySize );
+    } else if( mySize == otherSize ) {
 
 
+        for( size_t i = 0; i < mySize; i++ ) {
+
+            tempValue = this->operator[]( i );
+            this->operator[]( i ) = other_list[ i ];
+            other_list[ i ] = tempValue;
+        }
+
+    }
+}
 
 
-// size_t pos = 1;
-// Slot< Type >* currentSlot = firstSlot->ptrNext;
-// Slot< Type >* anotherFirst = firstSlot->ptrNext;
-
-// while( anotherFirst->ptrNext != nullptr ) {
-
-
-// while( currentSlot->ptrNext != nullptr ) {
-// if( anotherFirst->data == currentSlot->data ) {
-
-// currentSlot = currentSlot->ptrNext;
-// erase( pos );
-// pos++;
-// } else {
-// currentSlot = currentSlot->ptrNext;
-// pos++;
-// }
-
-// }
-// anotherFirst = anotherFirst->ptrNext;
-// }
-
-
-
-
-
-// Slot< Type >* anotherFirst = new Slot< Type >( firstSlot->data );
-// Slot< Type >* currentSlot = firstSlot->ptrNext;
-// Slot< Type >* anotherCurrent = anotherFirst;
-// bool same = 0;
-
-// size_t counter = 0;
-
-// for( size_t i = 1; i < listSize; i++ ) {
-// if( currentSlot->data == anotherCurrent->data ) {
-// same = true;
-// }
-// currentSlot = currentSlot->ptrNext;
-// }
-// if (same
+// Slot< Type >* temp = this->firstSlot;
+// this->firstSlot = other_list->firstSlot;
+// other_list->firstSlot = temp;

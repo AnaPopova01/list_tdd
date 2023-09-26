@@ -34,8 +34,7 @@ public:
     void resize( size_t n );
     void resize( size_t n, Type value );
 
-    void swap( List& other_list ); // sxdcfvghbjnmk,l.;/
-
+    void swap( List& other_list );
 
     Type& operator[]( size_t index );
     const Type& operator[]( size_t index ) const;
@@ -262,7 +261,7 @@ Type* List< Type >::begin() {
 
         throw std::runtime_error( "list is empty" ); // need to check
     }
-    // Type* dataptr = &( firstSlot->data );
+
     return &( firstSlot->data );
 
 
@@ -284,7 +283,7 @@ Type* List< Type >::end() {
         while( currentSlot->ptrNext != nullptr ) {
             currentSlot = currentSlot->ptrNext;
         }
-        // Type* dataptr = &( currentSlot->data );
+
         return &( currentSlot->data );
     }
 }
@@ -462,7 +461,3 @@ void List< Type >::swap( List& other_list ) {
     }
 }
 
-
-// Slot< Type >* temp = this->firstSlot;
-// this->firstSlot = other_list->firstSlot;
-// other_list->firstSlot = temp;

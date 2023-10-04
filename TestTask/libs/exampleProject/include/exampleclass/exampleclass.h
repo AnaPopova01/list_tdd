@@ -4,21 +4,19 @@
 #include <stdexcept>
 
 
-
-
 template < typename Type >
 class List {
 public:
     List();
+    List(  List& other );
+    List& operator=(  List& other );
+
     ~List() {
         clean();
     }
 
-    size_t getSize() {
-        return listSize;
-    }
     void push_back( Type data );
-    void push_back();
+
     int size();
     bool empty();
     Type front();
@@ -57,7 +55,20 @@ public:
 
     Slot< Type >* firstSlot;
     std::size_t listSize;
+    void placeSlot( size_t pos, Type value );
+    void deleteSlot( size_t pos );
+    Type* returnPos( size_t pos );
+    void swapValue(  Type& a, Type& b  );
+
+    void plusSize() {
+        listSize++;
+    }
+    void minusSize() {
+        listSize--;
+    }
 };
+
+
 
 template < typename Type >
 List< Type >::List() {
@@ -67,43 +78,114 @@ List< Type >::List() {
 }
 
 template < typename Type >
+List< Type >::List( List& other ) {
+
+    int otherSize = other.size();
+
+    for( int i = 0; i < otherSize; i++ ) {
+
+        this->push_back( other[ i ] );
+    }
+}
+
+
+
+
+template < typename Type >
 int List< Type >::size() {
     return listSize;
 }
 
 template < typename Type >
-void List< Type >::push_back( Type data ) {
+void List< Type >::placeSlot( size_t pos, Type value ) {
 
-    if( firstSlot == nullptr ) {
-        firstSlot = new Slot< Type >( data );
+    if( listSize == 0 ) {
+
+        firstSlot = new Slot< Type >( value );
     } else {
+        if(  pos == 0  ) {
 
-        Slot< Type >* currentSlot = this->firstSlot;
-        while( currentSlot->ptrNext != nullptr ) {
-            currentSlot = currentSlot->ptrNext;
+            Slot< Type >* temp = firstSlot; // создаем еще один указатель на первый слот
+            firstSlot = new Slot< Type >( value, temp ); // создаем новый первый слот
+
+        } else if( pos == listSize ) {
+
+            Slot< Type >* currentSlot = this->firstSlot; // итерируемся по элементам списка
+            while( currentSlot->ptrNext != nullptr ) { // ищем конец списка
+                currentSlot = currentSlot->ptrNext;
+            }
+            currentSlot->ptrNext = new Slot< Type >( value ); // добавляем в конец списка элемент
+
+        } else {
+
+            Slot< Type >* currentSlot = this->firstSlot; // итерируемся по элементам списка
+            for( std::size_t counter = 0; counter < pos - 1; counter++ ) { // ищем нужный элемент
+                currentSlot = currentSlot->ptrNext;
+            }
+            Slot< Type >* nSlot = new Slot< Type >( value, currentSlot->ptrNext ); // создаем новый слот
+            currentSlot->ptrNext = nSlot; // встраиваем новый слот в список
+
         }
-        currentSlot->ptrNext = new Slot< Type >( data );
     }
-    listSize++;
 
 }
 
 template < typename Type >
-void List< Type >::push_back() {
+void List< Type >::deleteSlot( size_t pos ) {
 
-    if( firstSlot == nullptr ) {
-        firstSlot = new Slot< Type >();
-    } else {
+    if( listSize == 1 ) {
 
-        Slot< Type >* currentSlot = this->firstSlot;
-        while( currentSlot->ptrNext != nullptr ) {
+        delete firstSlot;
+        firstSlot = nullptr;
+        minusSize();
+
+    } else if( pos == listSize - 1 ) {
+        Slot< Type >* currentSlot = firstSlot;
+        for( uint32_t i = 0; i < listSize - 2; i++ ) {
             currentSlot = currentSlot->ptrNext;
         }
-        currentSlot->ptrNext = new Slot< Type >();
+        delete currentSlot->ptrNext;
+        currentSlot->ptrNext = nullptr;
+        minusSize();
+    } else if( pos == 0 ) {
+
+        Slot< Type >* temp = firstSlot;
+        firstSlot = firstSlot->ptrNext;
+        delete temp;
+        temp = nullptr;
+        minusSize();
+    } else {
+
+        Slot< Type >* currentSlot = firstSlot;
+        for( std::size_t counter = 0; counter != pos - 1; counter++ ) {
+            currentSlot = currentSlot->ptrNext;
+        }
+        Slot< Type >* temp = currentSlot->ptrNext;
+        currentSlot->ptrNext = temp->ptrNext;
+        delete temp;
+        temp = nullptr;
+        minusSize();
     }
-    listSize++;
 
 }
+
+
+
+template < typename Type >
+void List< Type >::push_back( Type data ) {
+
+
+    if( listSize == 0 ) { // проверка наличия элементов в списке
+
+        placeSlot( 0, data ); // размещаем новый элемент
+    } else {
+
+        placeSlot( listSize, data );
+    }
+
+    plusSize();
+}
+
 
 template < typename Type >
 bool List< Type >::empty() {
@@ -117,61 +199,33 @@ bool List< Type >::empty() {
 template < typename Type >
 Type List< Type >::front() {
 
-    if( listSize == 0 ) {
+    if( listSize != 0 ) {
 
-        throw std::runtime_error( "list is empty" ); // need to check
+        return *returnPos( 0 );
     }
-    return firstSlot->data;
-
 
 }
+
 
 template < typename Type >
 Type List< Type >::back() {
 
-    if( listSize == 0 ) {
+    if( listSize != 0 ) {
 
-        throw std::runtime_error( "list is empty" ); // need to check
-    }
-    if( listSize == 1 ) {
-        return firstSlot->data;
-    } else {
+        if( listSize == 1 ) {
+            return *returnPos( 0 );
+        } else {
 
-        Slot< Type >* currentSlot = this->firstSlot;
-        while( currentSlot->ptrNext != nullptr ) {
-            currentSlot = currentSlot->ptrNext;
+            return *returnPos( listSize - 1 );
         }
-        return currentSlot->data;
     }
-
 }
 
 template < typename Type >
 void List< Type >::pop_back() {
 
-    if( listSize == 0 ) {
-
-        throw std::runtime_error( "list is empty" ); // need to check
-
-    }
-
-    if( listSize == 1 ) {
-
-        delete firstSlot;
-        firstSlot = nullptr;
-        listSize--;
-
-    }
-
-    if( listSize > 1 ) {
-
-        Slot< Type >* currentSlot = firstSlot;
-        for( uint32_t i = 0; i < listSize - 2; i++ ) {
-            currentSlot = currentSlot->ptrNext;
-        }
-        delete currentSlot->ptrNext;
-        currentSlot->ptrNext = nullptr;
-        listSize--;
+    if( listSize != 0 ) {
+        deleteSlot( listSize - 1 );
     }
 
 }
@@ -179,26 +233,10 @@ void List< Type >::pop_back() {
 template < typename Type >
 void List< Type >::pop_front() {
 
-    if( listSize == 0 ) {
-
-        throw std::runtime_error( "list is empty" ); // need to check
-
+    if( listSize != 0 ) {
+        deleteSlot( 0 );
     }
 
-    if( listSize == 1 ) {
-
-        delete firstSlot;
-        firstSlot = nullptr;
-        listSize--;
-
-    }
-    if( listSize > 1 ) {
-        Slot< Type >* temp = firstSlot;
-        firstSlot = firstSlot->ptrNext;
-        delete temp;
-        temp = nullptr;
-        listSize--;
-    }
 
 }
 
@@ -213,72 +251,33 @@ void List< Type >::clean() {
 template < typename Type >
 void List< Type >::push_front( Type value ) {
 
-    if( firstSlot == nullptr ) {
-        firstSlot = new Slot< Type >( value );
-    }   else {
-        Slot< Type >* temp = firstSlot;
-        firstSlot = new Slot< Type >( value, temp );
-
-    }
-    listSize++;
+    placeSlot( 0, value );
+    plusSize(); // увеличиваем размер списка
 }
 
 template < typename Type >
 void List< Type >::erase( size_t pos ) {
 
-    if( listSize == 0 ) {
 
-        throw std::runtime_error( "list is empty" ); // need to check
+    if( listSize != 0 ) {
+        if( pos >= listSize ) {
 
+            throw std::runtime_error( "this position is out of range" ); // need to check
+
+        } else {
+
+            deleteSlot( pos );
+        }
     }
-    if( pos >= listSize ) {
+}
 
-        throw std::runtime_error( "this position is out of range" ); // need to check
-
-    }
+template < typename Type >
+Type* List< Type >::returnPos( size_t pos ) {
 
     if( pos == 0 ) {
-        pop_front();
+        return &( firstSlot->data );
     } else if( pos == listSize - 1 ) {
-        pop_back();
-    } else {
-        Slot< Type >* currentSlot = firstSlot; // или this->firstSlot?
-        for( std::size_t counter = 0; counter != pos - 1; counter++ ) {
-            currentSlot = currentSlot->ptrNext;
-        }
-        Slot< Type >* temp = currentSlot->ptrNext;
-        currentSlot->ptrNext = temp->ptrNext;
-        delete temp;
-        temp = nullptr;
-        listSize--;
-    }
-}
 
-template < typename Type >
-Type* List< Type >::begin() {
-
-    if( listSize == 0 ) {
-
-        throw std::runtime_error( "list is empty" ); // need to check
-    }
-
-    return &( firstSlot->data );
-
-
-}
-
-template < typename Type >
-Type* List< Type >::end() {
-
-    if( listSize == 0 ) {
-
-        throw std::runtime_error( "list is empty" ); // need to check
-    }
-    if( listSize == 1 ) {
-
-        Type* dataptr = &( firstSlot->data );
-        return dataptr;
-    } else {
         Slot< Type >* currentSlot = this->firstSlot;
         while( currentSlot->ptrNext != nullptr ) {
             currentSlot = currentSlot->ptrNext;
@@ -288,30 +287,44 @@ Type* List< Type >::end() {
     }
 }
 
+
+template < typename Type >
+Type* List< Type >::begin() {
+
+    if( listSize != 0 ) {
+
+        return returnPos( 0 );
+    }
+
+}
+
+template < typename Type >
+Type* List< Type >::end() {
+
+    if( listSize != 0 ) {
+
+        if( listSize == 1 ) {
+
+            return returnPos( 0 );
+
+        } else {
+
+            return returnPos( listSize - 1 );
+        }
+    }
+}
+
 template < typename Type >
 void List< Type >::insert( std::size_t pos, Type value ) {
 
-
-    if(  pos == 0  ) {
-
-        push_front( value );
-
-    } else if( pos == listSize ) {
-
-        push_back( value );
-
-    } else if( pos > listSize ) {
+    if( pos > listSize ) {
 
         throw std::runtime_error( "this position is out of range" );
 
     } else {
-        Slot< Type >* currentSlot = this->firstSlot;
-        for( std::size_t counter = 0; counter < pos - 1; counter++ ) {
-            currentSlot = currentSlot->ptrNext;
-        }
-        Slot< Type >* nSlot = new Slot< Type >( value, currentSlot->ptrNext );
-        currentSlot->ptrNext = nSlot;
-        listSize++;
+
+        placeSlot( pos, value );
+        plusSize();
     }
 }
 
@@ -321,11 +334,13 @@ void List< Type >::resize( size_t n ) {
     if( n == 0 ) {
 
         clean();
+
     } else if( n > listSize ) {
 
         while( n != listSize ) {
 
-            push_back();
+            Type data = Type();
+            push_back( data );
         }
     } else if( n < listSize ) {
         while( n != listSize ) {
@@ -338,7 +353,10 @@ template < typename Type >
 void List< Type >::resize( size_t n, Type value ) {
 
     if( n < listSize ) {
-        resize( n );
+
+        while( n != listSize ) {
+            pop_back();
+        }
     } else {
 
         while( n != listSize ) {
@@ -397,15 +415,13 @@ Type&  List< Type >::operator[]( size_t index ) {
 template < typename Type >
 void unique( List< Type >& list ) {
 
-    size_t lSize = list.getSize();
+    size_t lSize = list.size();
 
-    if( lSize == 0 ) {
-
-        throw std::runtime_error( "list is empty" );
-    } else if( lSize > 1 ) {
+    if( lSize > 1 ) {
 
         for( size_t newN = 0; newN < lSize - 1; newN++ ) {
             for( size_t oldN = newN + 1; oldN < lSize;) {
+
                 if( list[ oldN ] == list[ newN ] ) {
                     list.erase( oldN );
                     lSize--;
@@ -423,39 +439,42 @@ void unique( List< Type >& list ) {
 }
 
 template < typename Type >
+void List< Type >::swapValue( Type& a, Type& b ) {
+
+    Type tempValue = a;
+    a = b;
+    b = tempValue;
+}
+
+template < typename Type >
 void List< Type >::swap( List& other_list ) {
 
     size_t mySize = this->listSize;
-    size_t otherSize = other_list.getSize();
-    Type tempValue;
+    size_t otherSize = other_list.size();
     if( mySize > otherSize ) {
 
         other_list.resize( mySize );
         for( size_t i = 0; i < mySize; i++ ) {
 
-            tempValue = this->operator[]( i );
-            this->operator[]( i ) = other_list[ i ];
-            other_list[ i ] = tempValue;
+            swapValue( this->operator[]( i ), other_list[ i ] );
         }
         this->resize( otherSize );
+
     } else if( mySize < otherSize ) {
 
-        this->resize( otherSize );
+        resize( otherSize );
         for( size_t i = 0; i < mySize; i++ ) {
 
-            tempValue = this->operator[]( i );
-            this->operator[]( i ) = other_list[ i ];
-            other_list[ i ] = tempValue;
+            swapValue( this->operator[]( i ), other_list[ i ] );
         }
         other_list.resize( mySize );
+
     } else if( mySize == otherSize ) {
 
 
         for( size_t i = 0; i < mySize; i++ ) {
 
-            tempValue = this->operator[]( i );
-            this->operator[]( i ) = other_list[ i ];
-            other_list[ i ] = tempValue;
+            swapValue( this->operator[]( i ), other_list[ i ] );
         }
 
     }

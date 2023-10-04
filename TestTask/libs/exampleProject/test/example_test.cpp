@@ -39,15 +39,9 @@ TEST( ListTests, front ) {
 
     List< char > list;
 
-    try {
-        list.front();
 
-    } catch( std::runtime_error& e ) {
+    list.front();
 
-        ASSERT_STREQ( e.what(), "list is empty" );
-        // std::cerr << e.what() << std::endl;
-
-    }
 
 
 
@@ -62,15 +56,10 @@ TEST( ListTests, front ) {
 TEST( ListTests, back ) {
 
     List< char > list;
-    try {
-        list.back();
 
-    } catch( std::runtime_error& e ) {
+    list.back();
 
-        ASSERT_STREQ( e.what(), "list is empty" );
-        // std::cerr << e.what() << std::endl;
 
-    }
     list.push_back( 'a' );
     ASSERT_EQ( 'a', list.back() );
     list.push_back( 'b' );
@@ -82,15 +71,7 @@ TEST( ListTests, back ) {
 TEST( ListTests, pop_back ) {
 
     List< char > list;
-    try {
-        list.pop_back();
-
-    } catch( std::runtime_error& e ) {
-
-        ASSERT_STREQ( e.what(), "list is empty" );
-        // std::cerr << e.what() << std::endl;
-
-    }
+    list.pop_back();
 
     list.push_back( 'a' );
     list.pop_back();
@@ -109,15 +90,9 @@ TEST( ListTests, pop_back ) {
 TEST( ListTests, pop_front ) {
 
     List< char > list;
-    try {
-        list.pop_front();
 
-    } catch( std::runtime_error& e ) {
+    list.pop_front();
 
-        ASSERT_STREQ( e.what(), "list is empty" );
-        // std::cerr << e.what() << std::endl;
-
-    }
 
     list.push_back( 'a' );
     list.pop_front();
@@ -164,16 +139,10 @@ TEST( ListTests, erase ) {
 
     List< char > list;
 
-    try {
 
-        list.erase( 0 );
+    list.erase( 0 );
 
-    } catch( std::runtime_error& e ) {
 
-        ASSERT_STREQ( e.what(), "list is empty" );
-        // std::cerr << e.what() << std::endl;
-
-    }
 
     list.push_back( 'a' );
     list.erase( 0 );
@@ -206,15 +175,10 @@ TEST( ListTests, erase ) {
 TEST( ListTests, begin ) {
 
     List< char > list;
-    try {
-        list.begin();
 
-    } catch( std::runtime_error& e ) {
+    list.begin();
 
-        ASSERT_STREQ( e.what(), "list is empty" );
-        // std::cerr << e.what() << std::endl;
 
-    }
 
     list.push_back( 'a' );
     list.push_back( 'b' );
@@ -231,15 +195,10 @@ TEST( ListTests, begin ) {
 TEST( ListTests, end ) {
 
     List< char > list;
-    try {
-        char* myptr = list.end();
 
-    } catch( std::runtime_error& e ) {
+    char* firstptr = list.end();
 
-        ASSERT_STREQ( e.what(), "list is empty" );
-        // std::cerr << e.what() << std::endl;
 
-    }
 
     list.push_back( 'a' );
     char* myptr = list.end();
@@ -390,15 +349,9 @@ TEST( ListTests, unique ) {
 
     List< char > list;
 
-    try {
-        unique( list );
+    unique( list );
 
-    } catch( std::runtime_error& e ) {
 
-        ASSERT_STREQ( e.what(), "list is empty" );
-        // std::cerr << e.what() << std::endl;
-
-    }
 
     list.push_back( 'a' );
     unique( list );
@@ -434,15 +387,10 @@ TEST( ListTests, swap ) {
 
     myList.swap( otherList );
 
-    try {
-        myList.pop_back();
 
-    } catch( std::runtime_error& e ) {
+    myList.pop_back();
 
-        ASSERT_STREQ( e.what(), "list is empty" );
-        std::cerr << e.what() << std::endl;
 
-    }
 
     myList.push_back( 'a' );
     myList.swap( otherList );
@@ -461,5 +409,17 @@ TEST( ListTests, swap ) {
 
 
 
+
+}
+
+TEST( ListTests, copyConstr ) {
+
+    List< int > otherlist;
+    otherlist.push_back( 7 );
+    otherlist.push_back( 8 );
+    ASSERT_EQ( 2, otherlist.size() );
+
+    List< int > mylist( otherlist );
+    ASSERT_EQ( 2, mylist.size() );
 
 }

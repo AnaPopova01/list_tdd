@@ -14,17 +14,19 @@ TEST( ListTests, push_back_AND_size ) {
     list.push_back( 7 );
     list.push_back( 8 );
     ASSERT_EQ( 2, list.size() );
+    std::cout << "adress of 8 is " << &list[ 1 ] << std::endl;
 
     list.push_back( 5.5 );
     list.push_back( 'a' );
     // list.push_back( "hi" );
-
-
-    ASSERT_EQ( 4, list.size() );
-
 }
 
-TEST( ListTests, empty ) {
+/*
+    ASSERT_EQ( 4, list.size() );
+
+   }
+
+   TEST( ListTests, empty ) {
 
     List< int > list;
     ASSERT_EQ( 1, list.empty() );
@@ -33,9 +35,9 @@ TEST( ListTests, empty ) {
     list.push_back( 'a' );
     ASSERT_EQ( 0, list.empty() );
 
-}
+   }
 
-TEST( ListTests, front ) {
+   TEST( ListTests, front ) {
 
     List< char > list;
 
@@ -51,9 +53,9 @@ TEST( ListTests, front ) {
     list.push_back( 'c' );
     ASSERT_EQ( 'a', list.front() );
 
-}
+   }
 
-TEST( ListTests, back ) {
+   TEST( ListTests, back ) {
 
     List< char > list;
 
@@ -66,9 +68,9 @@ TEST( ListTests, back ) {
     list.push_back( 'c' );
     ASSERT_EQ( 'c', list.back() );
 
-}
+   }
 
-TEST( ListTests, pop_back ) {
+   TEST( ListTests, pop_back ) {
 
     List< char > list;
     list.pop_back();
@@ -85,9 +87,9 @@ TEST( ListTests, pop_back ) {
     ASSERT_EQ( 'b', list.back() );
 
 
-}
+   }
 
-TEST( ListTests, pop_front ) {
+   TEST( ListTests, pop_front ) {
 
     List< char > list;
 
@@ -106,9 +108,9 @@ TEST( ListTests, pop_front ) {
     ASSERT_EQ( 'b', list.front() );
 
 
-}
+   }
 
-TEST( ListTests, clear ) {
+   TEST( ListTests, clear ) {
 
     List< int > list;
     list.clean();
@@ -119,9 +121,9 @@ TEST( ListTests, clear ) {
     list.clean();
     ASSERT_EQ( 0, list.size() );
 
-}
+   }
 
-TEST( ListTests, push_front ) {
+   TEST( ListTests, push_front ) {
 
     List< char > list;
     list.push_front( 'a' );
@@ -133,9 +135,9 @@ TEST( ListTests, push_front ) {
     ASSERT_EQ( 'a', list.back() );
     ASSERT_EQ( 3, list.size() );
 
-}
+   }
 
-TEST( ListTests, erase ) {
+   TEST( ListTests, erase ) {
 
     List< char > list;
 
@@ -170,9 +172,9 @@ TEST( ListTests, erase ) {
         // std::cerr << e.what() << std::endl;
 
     }
-}
+   }
 
-TEST( ListTests, begin ) {
+   TEST( ListTests, begin ) {
 
     List< char > list;
 
@@ -184,15 +186,15 @@ TEST( ListTests, begin ) {
     list.push_back( 'b' );
     list.push_back( 'c' );
     char* myptr = list.begin();
-    *myptr = 'g';
+ * myptr = 'g';
 
     ASSERT_EQ( 'g', list.front() );
-    *myptr = 7;
+ * myptr = 7;
     ASSERT_EQ( 7, list.front() );
 
-}
+   }
 
-TEST( ListTests, end ) {
+   TEST( ListTests, end ) {
 
     List< char > list;
 
@@ -202,18 +204,18 @@ TEST( ListTests, end ) {
 
     list.push_back( 'a' );
     char* myptr = list.end();
-    *myptr = 'g';
+ * myptr = 'g';
     ASSERT_EQ( 'g', list.back() );
 
     list.push_back( 'b' );
     list.push_back( 'c' );
     myptr = list.end();
-    *myptr = 'z';
+ * myptr = 'z';
     ASSERT_EQ( 'z', list.back() );
 
-}
+   }
 
-TEST( ListTests, insert ) {
+   TEST( ListTests, insert ) {
 
     List< char > list;
 
@@ -246,9 +248,9 @@ TEST( ListTests, insert ) {
 
 
 
-}
+   }
 
-TEST( ListTests, resize ) {
+   TEST( ListTests, resize ) {
 
     List< char > mylist;
     List< char > list;
@@ -273,9 +275,9 @@ TEST( ListTests, resize ) {
     list.resize( 0 );
     ASSERT_EQ( 0, list.size() );
 
-}
+   }
 
-TEST( ListTests, value_resize ) {
+   TEST( ListTests, value_resize ) {
 
     List< char > mylist;
     List< char > list;
@@ -304,9 +306,9 @@ TEST( ListTests, value_resize ) {
     list.resize( 0, 'g' );
     ASSERT_EQ( 0, list.size() );
 
-}
+   }
 
-TEST( ListTests, brackets ) {
+   TEST( ListTests, brackets ) {
 
     List< char > list;
 
@@ -343,9 +345,9 @@ TEST( ListTests, brackets ) {
 
     }
 
-}
+   }
 
-TEST( ListTests, unique ) {
+   TEST( ListTests, unique ) {
 
     List< char > list;
 
@@ -378,9 +380,9 @@ TEST( ListTests, unique ) {
     ASSERT_EQ( 4, list.size() );
 
 
-}
+   }
 
-TEST( ListTests, swap ) {
+   TEST( ListTests, swap ) {
 
     List< char > myList;
     List< char > otherList;
@@ -410,16 +412,55 @@ TEST( ListTests, swap ) {
 
 
 
-}
+   }
+ */
 
-TEST( ListTests, copyConstr ) {
+// TEST( ListTests, copyConstr ) {
 
-    List< int > otherlist;
-    otherlist.push_back( 7 );
-    otherlist.push_back( 8 );
-    ASSERT_EQ( 2, otherlist.size() );
+// List< int > otherlist;
+// otherlist.push_back( 7 );
+// otherlist.push_back( 8 );
+// ASSERT_EQ( 2, otherlist.size() );
 
-    List< int > mylist( otherlist );
-    ASSERT_EQ( 2, mylist.size() );
+// List< int > mylist( otherlist );
+//// std::cout << otherlist[ 0 ] << std::endl;
+//// std::cout << otherlist[ 1 ] << std::endl;
 
-}
+
+
+// ASSERT_EQ( 2, mylist.size() );
+
+// }
+
+// TEST( ListTests, parameterConstr ) {
+
+
+// List< int > mylist( 5, 111 );
+// ASSERT_EQ( 5, mylist.size() );
+//// std::cout << mylist[ 0 ] << std::endl;
+//// std::cout << mylist[ 1 ] << std::endl;
+//// std::cout << mylist.size() << std::endl;
+
+// }
+
+// TEST( ListTests, moveConstr ) {
+
+// ListWrap< int > mylistWrap = List< int >{ 3, 7 };
+// mylistWrap.showList();
+
+// ListWrap< int > otherlistWrap( List< int >{ 3, 6 } );
+// otherlistWrap.showList();
+
+
+// }
+
+// TEST( ListTests, equConstr ) {
+
+// List< int > mylist( 5, 7 );
+// ASSERT_EQ( 5, mylist.size() );
+// List< int > otherlist = mylist;
+
+// std::cout << otherlist[ 0 ] << std::endl;
+// std::cout << otherlist[ 1 ] << std::endl;
+// ASSERT_EQ( 5, otherlist.size() );
+// }

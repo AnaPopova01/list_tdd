@@ -1,22 +1,31 @@
 #pragma once
 #include <cstdint>
-#include <typeinfo>
+#include <iostream>
 #include <stdexcept>
+
+
 
 
 template < typename Type >
 class List {
 public:
-    List();
-    List(  List& other );
-    List& operator=(  List& other );
+    List(); // default
+    List( size_t n, Type data = Type() ); // with parameters
+
+    List(  List& other );// copy
+    List(  List&& other );// move
+    void operator=(  List& other );// присваиваниe копированием
+    void operator=(  List&& other );// присваиваниe переносом
+
 
     ~List() {
+
+        std::cout << "destructor for object  " << this << std::endl;
         clean();
     }
 
-    void push_back( Type data );
-
+    void push_back( const Type& data );
+// void push_back( Type&& data );
     int size();
     bool empty();
     Type front();
@@ -32,11 +41,15 @@ public:
     void resize( size_t n );
     void resize( size_t n, Type value );
 
+
     void swap( List& other_list );
 
     Type& operator[]( size_t index );
     const Type& operator[]( size_t index ) const;
 
+    size_t getSize() {
+        return listSize;
+    }
 
 
 private:
@@ -54,7 +67,7 @@ public:
     };
 
     Slot< Type >* firstSlot;
-    std::size_t listSize;
+    size_t listSize;
     void placeSlot( size_t pos, Type value );
     void deleteSlot( size_t pos );
     Type* returnPos( size_t pos );
@@ -73,12 +86,46 @@ public:
 template < typename Type >
 List< Type >::List() {
 
+    std::cout << "default constructor for object  " << this  << std::endl;
     listSize = 0;
     firstSlot = nullptr;
 }
 
 template < typename Type >
+List< Type >::List( size_t n, Type data ) {
+
+    listSize = 0;
+    firstSlot = nullptr;
+    std::cout << "constructor with parameters for object  " << this  << std::endl;
+    this->resize( n, data );
+}
+
+
+template < typename Type >
 List< Type >::List( List& other ) {
+
+    std::cout << "copy constructor for object  " << this << std::endl;
+    int otherSize = other.size();
+
+    for( int i = 0; i < otherSize; i++ ) {
+
+        this->push_back( other[ i ] );
+    }
+}
+
+template < typename Type >
+List< Type >::List( List&& other ) {
+
+    std::cout << "move constructor for object " << this << std::endl;
+    this->listSize = other.size();
+    this->firstSlot = other.firstSlot;
+    other.firstSlot = nullptr;
+    other.listSize = 0;
+}
+
+
+template < typename Type >
+void List< Type >::operator=(  List& other ) {
 
     int otherSize = other.size();
 
@@ -88,7 +135,14 @@ List< Type >::List( List& other ) {
     }
 }
 
+template < typename Type >
+void List< Type >::operator=(  List&& other ) {
 
+    this->listSize = other.size();
+    this->firstSlot = other.firstSlot;
+    other.firstSlot = nullptr;
+}
+///////////////////////////////////////////////////////////////////////
 
 
 template < typename Type >
@@ -170,9 +224,8 @@ void List< Type >::deleteSlot( size_t pos ) {
 }
 
 
-
 template < typename Type >
-void List< Type >::push_back( Type data ) {
+void List< Type >::push_back( const Type& data ) {
 
 
     if( listSize == 0 ) { // проверка наличия элементов в списке
@@ -185,6 +238,23 @@ void List< Type >::push_back( Type data ) {
 
     plusSize();
 }
+
+
+// template < typename Type >
+// void List< Type >::push_back( Type&& data ) {
+
+// std::cout << "&& version" << std::endl;
+
+// if( listSize == 0 ) { // проверка наличия элементов в списке
+
+// placeSlot( 0, std::move( data ) ); // размещаем новый элемент
+// } else {
+
+// placeSlot( listSize, std::move( data ) );
+// }
+
+// plusSize();
+// }
 
 
 template < typename Type >
@@ -480,3 +550,34 @@ void List< Type >::swap( List& other_list ) {
     }
 }
 
+List< int > getList() {
+
+    List< int > otherlist;
+    for( int i = 0; i < 1000; i++ ) {
+        otherlist.push_back( i );
+    }
+
+
+    return otherlist;
+}
+
+template < typename Type >
+class ListWrap {
+
+public:
+
+    ListWrap(  List< Type > alist ) : oneList{ std::move( alist ) } {
+    }
+    void showList() {
+
+        std::cout << "list: ";
+        for( size_t i = 0; i < this->oneList.getSize(); i++ ) {
+
+            std::cout << oneList[ i ] << " ";
+        }
+        std::cout << std::endl;
+    }
+private:
+
+    List< Type > oneList;
+};

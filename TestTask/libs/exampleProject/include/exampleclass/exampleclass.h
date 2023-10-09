@@ -25,7 +25,8 @@ public:
     }
 
     void push_back( const Type& data );
-// void push_back( Type&& data );
+    void push_back( Type&& data );
+
     int size();
     bool empty();
     Type front();
@@ -33,14 +34,20 @@ public:
     void pop_back();
     void pop_front();
     void clean();
-    void push_front( Type value );
+
+    void push_front( const Type& value  );
+    void push_front( Type&& value );
+
     void erase( size_t pos );
     Type* begin();
     Type* end();
-    void insert( size_t pos, Type value );
-    void resize( size_t n );
-    void resize( size_t n, Type value );
 
+    void insert( size_t pos, const Type& value );
+    void insert( size_t pos, Type&& value );
+
+    void resize( size_t n );
+    void resize( size_t n, const Type& value );
+    void resize( size_t n, Type&& value );
 
     void swap( List& other_list );
 
@@ -58,8 +65,11 @@ private:
     class Slot {
 public:
 
-        Slot( Type data = Type(), Slot* ptrNext = nullptr ) : data( data ), ptrNext( ptrNext ) {
+        Slot( const Type& data = Type(), Slot* ptrNext = nullptr ) : data( data ), ptrNext( ptrNext ) {
         }
+        Slot( Type&& data = Type(), Slot* ptrNext = nullptr ) : data( data ), ptrNext( ptrNext ) {
+        }
+
         ~Slot() {
         }
         Slot< Type >* ptrNext;
@@ -68,7 +78,10 @@ public:
 
     Slot< Type >* firstSlot;
     size_t listSize;
-    void placeSlot( size_t pos, Type value );
+
+    void placeSlot( size_t pos, const Type& value );
+    void placeSlot( size_t pos, Type&& value );
+
     void deleteSlot( size_t pos );
     Type* returnPos( size_t pos );
     void swapValue(  Type& a, Type& b  );
@@ -151,7 +164,7 @@ int List< Type >::size() {
 }
 
 template < typename Type >
-void List< Type >::placeSlot( size_t pos, Type value ) {
+void List< Type >::placeSlot( size_t pos, const Type& value ) {
 
     if( listSize == 0 ) {
 
@@ -177,6 +190,40 @@ void List< Type >::placeSlot( size_t pos, Type value ) {
                 currentSlot = currentSlot->ptrNext;
             }
             Slot< Type >* nSlot = new Slot< Type >( value, currentSlot->ptrNext ); // создаем новый слот
+            currentSlot->ptrNext = nSlot; // встраиваем новый слот в список
+
+        }
+    }
+
+}
+
+template < typename Type >
+void List< Type >::placeSlot( size_t pos, Type&& value ) {
+
+    if( listSize == 0 ) {
+
+        firstSlot = new Slot< Type >( std::move( value ) );
+    } else {
+        if(  pos == 0  ) {
+
+            Slot< Type >* temp = firstSlot; // создаем еще один указатель на первый слот
+            firstSlot = new Slot< Type >( std::move( value ), temp ); // создаем новый первый слот
+
+        } else if( pos == listSize ) {
+
+            Slot< Type >* currentSlot = this->firstSlot; // итерируемся по элементам списка
+            while( currentSlot->ptrNext != nullptr ) { // ищем конец списка
+                currentSlot = currentSlot->ptrNext;
+            }
+            currentSlot->ptrNext = new Slot< Type >( std::move( value ) ); // добавляем в конец списка элемент
+
+        } else {
+
+            Slot< Type >* currentSlot = this->firstSlot; // итерируемся по элементам списка
+            for( std::size_t counter = 0; counter < pos - 1; counter++ ) { // ищем нужный элемент
+                currentSlot = currentSlot->ptrNext;
+            }
+            Slot< Type >* nSlot = new Slot< Type >( std::move( value ), currentSlot->ptrNext ); // создаем новый слот
             currentSlot->ptrNext = nSlot; // встраиваем новый слот в список
 
         }
@@ -240,21 +287,21 @@ void List< Type >::push_back( const Type& data ) {
 }
 
 
-// template < typename Type >
-// void List< Type >::push_back( Type&& data ) {
+template < typename Type >
+void List< Type >::push_back( Type&& data ) {
 
-// std::cout << "&& version" << std::endl;
+    // std::cout << "&& version" << std::endl;
 
-// if( listSize == 0 ) { // проверка наличия элементов в списке
+    if( listSize == 0 ) { // проверка наличия элементов в списке
 
-// placeSlot( 0, std::move( data ) ); // размещаем новый элемент
-// } else {
+        placeSlot( 0,  std::move( data ) );// размещаем новый элемент
+    } else {
 
-// placeSlot( listSize, std::move( data ) );
-// }
+        placeSlot( listSize, std::move( data )   );
+    }
 
-// plusSize();
-// }
+    plusSize();
+}
 
 
 template < typename Type >
@@ -319,7 +366,16 @@ void List< Type >::clean() {
 }
 
 template < typename Type >
-void List< Type >::push_front( Type value ) {
+void List< Type >::push_front( const Type& value ) {
+
+    placeSlot( 0, value );
+    plusSize(); // увеличиваем размер списка
+}
+
+template < typename Type >
+void List< Type >::push_front( Type&& value ) {
+
+    // std::cout << "&& version" << std::endl;
 
     placeSlot( 0, value );
     plusSize(); // увеличиваем размер списка
@@ -385,7 +441,21 @@ Type* List< Type >::end() {
 }
 
 template < typename Type >
-void List< Type >::insert( std::size_t pos, Type value ) {
+void List< Type >::insert( std::size_t pos, const Type& value ) {
+
+    if( pos > listSize ) {
+
+        throw std::runtime_error( "this position is out of range" );
+
+    } else {
+
+        placeSlot( pos, value );
+        plusSize();
+    }
+}
+
+template < typename Type >
+void List< Type >::insert( std::size_t pos, Type&& value ) {
 
     if( pos > listSize ) {
 
@@ -420,7 +490,24 @@ void List< Type >::resize( size_t n ) {
 }
 
 template < typename Type >
-void List< Type >::resize( size_t n, Type value ) {
+void List< Type >::resize( size_t n, const Type& value ) {
+
+    if( n < listSize ) {
+
+        while( n != listSize ) {
+            pop_back();
+        }
+    } else {
+
+        while( n != listSize ) {
+
+            push_back( value );
+        }
+    }
+}
+
+template < typename Type >
+void List< Type >::resize( size_t n, Type&& value ) {
 
     if( n < listSize ) {
 
@@ -550,16 +637,7 @@ void List< Type >::swap( List& other_list ) {
     }
 }
 
-List< int > getList() {
 
-    List< int > otherlist;
-    for( int i = 0; i < 1000; i++ ) {
-        otherlist.push_back( i );
-    }
-
-
-    return otherlist;
-}
 
 template < typename Type >
 class ListWrap {

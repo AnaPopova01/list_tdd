@@ -118,6 +118,8 @@ template < typename Type >
 List< Type >::List( List& other ) {
 
     std::cout << "copy constructor for object  " << this << std::endl;
+    this->listSize = 0;
+    this->firstSlot = nullptr;
     int otherSize = other.size();
 
     for( int i = 0; i < otherSize; i++ ) {
@@ -166,7 +168,7 @@ int List< Type >::size() {
 template < typename Type >
 void List< Type >::placeSlot( size_t pos, const Type& value ) {
 
-    if( listSize == 0 ) {
+    if( this->listSize == 0 ) {
 
         firstSlot = new Slot< Type >( value );
     } else {

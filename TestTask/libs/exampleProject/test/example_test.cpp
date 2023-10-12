@@ -405,10 +405,6 @@ TEST( ListTests, swap ) {
     myList.swap( otherList );
     ASSERT_EQ( 3, myList.size() );
     ASSERT_EQ( '1', otherList.front() );
-
-
-
-
 }
 
 

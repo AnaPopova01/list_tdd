@@ -3,7 +3,7 @@
 #include <iostream>
 #include <stdexcept>
 
-
+// лист листов с копированием данных
 
 
 template < typename Type >

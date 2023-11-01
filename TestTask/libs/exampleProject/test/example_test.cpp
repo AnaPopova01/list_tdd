@@ -469,7 +469,8 @@ TEST( ListTests, listlistovCOPY ) {
     grand.push_back( secondlist );
     grand.push_back( thirdlist );
     ASSERT_EQ( 1, grand[ 2 ].size() );
-
+    grand.pop_front();
+    ASSERT_EQ( 2, grand.size() );
 }
 
 // TEST( ListTests, listlistovCONNECT ) {

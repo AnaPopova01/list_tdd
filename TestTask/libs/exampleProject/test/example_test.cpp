@@ -457,3 +457,56 @@ TEST( ListTests, equConstr ) {
     std::cout << otherlist[ 1 ] << std::endl;
     ASSERT_EQ( 5, otherlist.size() );
 }
+
+
+TEST( ListTests, listlistovCOPY ) {
+
+    List< int > firstlist( 3, 7 );
+    List< int > secondlist( 3, 6 );
+    List< int > thirdlist( 1, 1 );
+    List< List< int > > grand;
+    grand.push_back( firstlist );
+    grand.push_back( secondlist );
+    grand.push_back( thirdlist );
+    ASSERT_EQ( 1, grand[ 2 ].size() );
+
+}
+
+// TEST( ListTests, listlistovCONNECT ) {
+
+// List< int > firstlist( 3, 7 );
+// List< int > secondlist( 3, 6 );
+// List< int > thirdlist( 1, 1 );
+// List< List< int > > grand;
+// grand.push_back( firstlist );
+// grand.push_back( secondlist );
+// grand.push_back( thirdlist );
+// ASSERT_EQ( 1, grand[ 2 ].size() );
+
+
+
+
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

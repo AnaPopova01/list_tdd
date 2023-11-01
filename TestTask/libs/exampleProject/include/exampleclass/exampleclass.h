@@ -12,7 +12,7 @@ public:
     List(); // default
     List( size_t n, Type data = Type() ); // with parameters
 
-    List(  List& other );// copy
+    List( const List& other );// copy
     List(  List&& other );// move
     void operator=(  List& other );// присваиваниe копированием
     void operator=(  List&& other );// присваиваниe переносом
@@ -25,9 +25,10 @@ public:
     }
 
     void push_back( const Type& data );
+    void push_back( const List< Type >& data );
     void push_back( Type&& data );
 
-    int size();
+    int size()const;
     bool empty();
     Type front();
     Type back();
@@ -54,9 +55,9 @@ public:
     Type& operator[]( size_t index );
     const Type& operator[]( size_t index ) const;
 
-    size_t getSize() {
-        return listSize;
-    }
+// size_t getSize() {
+// return listSize;
+// }
 
 
 private:
@@ -70,16 +71,24 @@ public:
         Slot( Type&& data = Type(), Slot* ptrNext = nullptr ) : data( data ), ptrNext( ptrNext ) {
         }
 
+        Slot( const List< Type >& data, Slot* ptrNext = nullptr ) : data( data ), ptrNext( ptrNext ) {
+        }
+
+
         ~Slot() {
         }
         Slot< Type >* ptrNext;
+        // Slot< List< Type > >* l_ptrNext;
         Type data;
+        // List< Type > l_data;
     };
 
-    Slot< Type >* firstSlot;
-    size_t listSize;
+    Slot< Type >* firstSlot = nullptr;
+    // Slot< List< Type > >* l_firstSlot = nullptr;
+    size_t listSize = 0;
 
     void placeSlot( size_t pos, const Type& value );
+    void placeSlot( size_t pos, const List< Type >& value );
     void placeSlot( size_t pos, Type&& value );
 
     void deleteSlot( size_t pos );
@@ -102,6 +111,7 @@ List< Type >::List() {
     std::cout << "default constructor for object  " << this  << std::endl;
     listSize = 0;
     firstSlot = nullptr;
+    // l_firstSlot = nullptr;
 }
 
 template < typename Type >
@@ -115,7 +125,7 @@ List< Type >::List( size_t n, Type data ) {
 
 
 template < typename Type >
-List< Type >::List( List& other ) {
+List< Type >::List( const List& other ) {
 
     std::cout << "copy constructor for object  " << this << std::endl;
     this->listSize = 0;
@@ -161,7 +171,7 @@ void List< Type >::operator=(  List&& other ) {
 
 
 template < typename Type >
-int List< Type >::size() {
+int List< Type >::size() const {
     return listSize;
 }
 
@@ -198,6 +208,42 @@ void List< Type >::placeSlot( size_t pos, const Type& value ) {
     }
 
 }
+
+
+template < typename Type >
+void List< Type >::placeSlot( size_t pos, const List< Type >& value ) {
+
+    if( this->listSize == 0 ) {
+
+        firstSlot = new Slot< List< Type > >( value );
+    } else {
+        if(  pos == 0  ) {
+
+            Slot< List< Type > >* temp = firstSlot; // создаем еще один указатель на первый слот
+            firstSlot = new Slot< List< Type > >( value, temp ); // создаем новый первый слот
+
+        } else if( pos == listSize ) {
+
+            Slot< List< Type > >* currentSlot = this->firstSlot; // итерируемся по элементам списка
+            while( currentSlot->ptrNext != nullptr ) { // ищем конец списка
+                currentSlot = currentSlot->ptrNext;
+            }
+            currentSlot->ptrNext = new Slot< List< Type > >( value ); // добавляем в конец списка элемент
+
+        } else {
+
+            Slot< List< Type > >* currentSlot = this->firstSlot; // итерируемся по элементам списка
+            for( std::size_t counter = 0; counter < pos - 1; counter++ ) { // ищем нужный элемент
+                currentSlot = currentSlot->ptrNext;
+            }
+            Slot< List< Type > >* nSlot = new Slot< List< Type > >( value, currentSlot->ptrNext ); // создаем новый слот
+            currentSlot->ptrNext = nSlot; // встраиваем новый слот в список
+
+        }
+    }
+
+}
+
 
 template < typename Type >
 void List< Type >::placeSlot( size_t pos, Type&& value ) {
@@ -288,11 +334,28 @@ void List< Type >::push_back( const Type& data ) {
     plusSize();
 }
 
+template < typename Type >
+void List< Type >::push_back( const List< Type >& data ) {
+
+
+    if( listSize == 0 ) { // проверка наличия элементов в списке
+
+        placeSlot( 0, data ); // размещаем новый элемент
+    } else {
+
+        placeSlot( listSize, data );
+    }
+
+    plusSize();
+}
+
+
+
 
 template < typename Type >
 void List< Type >::push_back( Type&& data ) {
 
-    // std::cout << "&& version" << std::endl;
+// std::cout << "&& version" << std::endl;
 
     if( listSize == 0 ) { // проверка наличия элементов в списке
 
@@ -651,7 +714,7 @@ public:
     void showList() {
 
         std::cout << "list: ";
-        for( size_t i = 0; i < this->oneList.getSize(); i++ ) {
+        for( size_t i = 0; i < this->oneList.size(); i++ ) {
 
             std::cout << oneList[ i ] << " ";
         }
